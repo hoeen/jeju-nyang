@@ -5,18 +5,15 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_chroma import Chroma
-import re
+
 from typing import List
-from itertools import permutations
+import os
 import streamlit as st
 from streamlit_chatbox import *
 import time
-import simplejson as json
 import textwrap
 from RAG.selfqueryingretriever_contents import SelfQueryingRetrieverContents
 from RAG.selfqueryingretriever_title import SelfQueryingRetrieverTitle
-
-import os
 
 from recommendation.item_base_rec import get_recommendations_for_item
 
@@ -68,7 +65,7 @@ def main():
         입력받은 질문이 "성산일출봉 다음으로 갈만한 곳을 알려줘" 라면
         "questionType": "여행지추천","keywords": ["성산일출봉"],"place_category": "1" 으로 저장합니다.
         
-        ## 주의사항! 
+        ## 주의사항!
             - 질문 속에 장소가 명시된 유무에 따라 place_category를 나눕니다. 이때'성산일출봉'과 같이 여행지/숙박업소/맛집의 이름이 등장하는 경우 '1', 없는 경우에는 '2'으로 분류하여 넣으세요.
     """
 
@@ -120,12 +117,10 @@ def main():
 
 ####
 # RAG for 동선 추천
-
 # VectorStore 및 검색기 설정
     vectorstore = Chroma(persist_directory="./vectorstores/wifilist_lat_db_v2", embedding_function=OpenAIEmbeddings(),
                          create_collection_if_not_exists=False)
     retriever = vectorstore.as_retriever(k=1)
-
 
 # 문서 형식 지정
     def format_docs(docs):
@@ -135,12 +130,12 @@ def main():
     recragtemplate = """
         당신은 주어진 리스트를 재구성해 User에게 적합한 동선과 거리를 추천하는 챗봇입니다. wifilist_lat_db_v2 Vector Store를 잘 참고해서, apGroupName이 정확히 일치하는 내용만을 문서로 뽑으세요. Vector Store 속 정확한 latitude와 longitude를 바탕으로 답하세요. 모든 가능한 조합에서, latitude와 longitude 차이의 절대값의 합, 즉 맨하탄 거리가 가장 짧은 것부터 동선을 선택하는 알고리즘을 따라야 합니다.
 
-### 예시 1:
+    ### 예시 1:
     Question: 나는 제주도에서 여행중이야. 출발지는 '천지연폭포'이고, 이후 내가 방문할 곳은 '세화 해변', '협재 해변(협재해수욕장)', '제주서문시장' 이야. 제일 가까운 곳부터 가려고 하는데, 최적의 동선을 출력해줘!
     Context: {context}
 
 
-    Answer:
+    [사고과정]
     wifilist_lat_db_v2라는 vector store에서, 출발지 '천지연폭포'의 latitude는 33.246139이고 longitude는 126.55595이다. 
     방문할 장소는 '세화 해변', '협재 해변(협재해수욕장)', '제주서문시장' 이다.
     방문할 장소들의 latitude, longitude를 각각 wifilist_lat_db_v2에서 찾아본다. '세화 해변' (latitude: 33.525276, longitude:126.859629), "협재 해변(협재해수욕장)" (latitude: 33.39476, longitude: 126.241228), "제주서문시장" (latitude: 33.511121,longitude:126.51778)이고
@@ -160,6 +155,8 @@ def main():
     따라서 '제주서문시장' 다음으로 방문할 곳은 둘 중 맨해튼 거리가 더 짧은 '세화 해변' 이다.
     마지막으로는 남아있는 원소인 '협재 해변(협재해수욕장)'를 방문한다.
 
+    :Answer:
+    천지연폭포 다음으로 최단거리 동선을 추천해드릴게요 ;) 제주서문시장 -> 세화해변 -> 협재 해변(협재해수욕장) 순서로 방문하세요냥!
 
 
 
@@ -171,10 +168,6 @@ def main():
 
     """
 
-
-#Answer:
-# 위도와 경도 기준으로 답변드리겠습니다. 출발지 '천지연폭포'에서 맨해튼 거리가 0.303152로 가장 짧은 '제주서문시장'을 먼저 방문하고, 이후 '제주서문시장'에서 거리가 0.356004로 가장 가까운 '세화 해변'을 방문한 뒤, '협재 해변(협재해수욕장)'을 방문하시는 것을 추천드립니다.
-
     recragprompt = ChatPromptTemplate.from_template(textwrap.dedent(recragtemplate))
 
     rec_rag_chain = (
@@ -184,57 +177,53 @@ def main():
         | StrOutputParser()
     )
 
-# # 질문에 대한 답변 생성
-# result = rec_rag_chain.invoke("한라수목원에서 출발할거야. 이후 '광치기해변', '표선 해비치 해변', '하도 해변' 어떤 순서로 가는 것이 최적일까? 동선을 추천해줘.")
-# print(result)
+####### 페이지 랜딩
 
+    st.title('제주냥😽')
+    init_content = "반가워!🐱💞 나는 제주도에 관한 답변을 해주는 제주냥이다냥! 제주도 맛집이나 카페, 여행지, 숙박업소 관련 질문을 해 주면 이 몸이 친절하게 알려주겠다냥 (=^･ｪ･^=))ﾉ彡☆🍊"
+    output=OutputElement(content = init_content, in_expander=True, title='answer',expanded =True,state= 'complete')
+    chat_box = ChatBox(greetings=output)
 
-#######
-    chat_box = ChatBox()
 
     with st.sidebar:
         st.subheader('start to chat using streamlit')
         streaming = st.checkbox('streaming', True)
         in_expander = st.checkbox('show messages in expander', True)
-        show_history = st.checkbox('show history', False)
+        
 
         st.divider()
-
         btns = st.container()
 
-        # file = st.file_uploader(
-        #     "chat_history.json",
-        #     type=["json"]
-        # )
 
         # Clear history button
         if st.button("clear_history"):
             chat_box.init_session(clear=True)
             st.experimental_rerun()
 
-        # # Load history from file (optional)
-        # if file is not None:
-        #     try:
-        #         data = json.load(file)
-        #         chat_box.from_dict(data)
-        #     except json.JSONDecodeError:
-        #         st.error("Error loading chat history. Please ensure it's valid JSON.")
-
+    
+        st.markdown(
+        """
+        <div style='position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px; font-size: 12px; color: gray;'>
+            Contact: emodel@naver.com / hoeen5373@gmail.com
+        </div>
+        """,
+        unsafe_allow_html=True
+)
+    
     chat_box.init_session()
     chat_box.output_messages()
 
 # RAG 인스턴스 
     selfqueryingretrieverTitle = SelfQueryingRetrieverTitle(llm, 'vectorstores/visitjeju_db_place_food_shopping_stay')
     selfqueryingretrieverContents = SelfQueryingRetrieverContents(llm, 'vectorstores/visitjeju_db_place_food_shopping_stay')
-
-
-    if query := st.chat_input('제주 여행지 관련 질문을 해 주세요.'):
+    
+    
+    query = st.chat_input('제주 여행지 관련 질문을 해 주세요.')
+    if query :
         chat_box.user_say(query)
         if streaming:
             llm_result = query_analyzer.invoke(query)
             print(llm_result.questionType, llm_result.keywords, llm_result.place_category)
-
-
             if llm_result.questionType == "여행지추천":
                 try:
                     recommended_items = get_recommendations_for_item(llm_result.keywords[0], 'sim_mat_240517.pkl', 'filtered_data_240517.csv')
@@ -254,12 +243,10 @@ def main():
                         if rag_chain is None: #title 못찾음
                             title = selfqueryingretrieverContents.query_analyzer.invoke({"question": query})
                             rag_chain = selfqueryingretrieverContents.create_rag_chain(title.place)
-                    print('rag_chain:',rag_chain)
                     if rag_chain is not None:
                         generator = rag_chain.invoke(query)
                         
                     else:
-                        print('이쪽으로 빠졌어요-------------------------------------------')
                         generator = chain.invoke(query)
             else:
                 if llm_result.place_category == '2': #추천 외
@@ -271,17 +258,15 @@ def main():
                     print("정보검색_rag_장소에대한질문")
                     place = selfqueryingretrieverTitle.query_analyzer.invoke({"question": query})
                     rag_chain = selfqueryingretrieverTitle.create_rag_chain(place.place)
-                print('rag_chain:',rag_chain)
+
                 if rag_chain is not None:
                     generator = rag_chain.invoke(query)
                 else:
-                    print('이쪽으로 빠졌어요-------------------------------------------')
                     generator = chain.invoke(query)
 
 
             elements = chat_box.ai_say(
                 [
-                    # you can use string for Markdown output if no other parameters provided
                     Markdown("thinking", in_expander=in_expander,
                             expanded=True, title="answer"),
 
@@ -289,8 +274,7 @@ def main():
             )
             time.sleep(1)
             text = ""
-            # for x, docs in enumerate(list(generator.content)): 
-            # breakpoint()
+
             if hasattr(generator, 'content'):
                 text = generator.content
             else:
@@ -299,22 +283,3 @@ def main():
                     chat_box.update_msg(text, element_index=0, streaming=True)
             # update the element without focus
             chat_box.update_msg(text, element_index=0, streaming=False, state="complete")
-        
-
-
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
-
-    if show_history:
-        st.write(chat_box.history)

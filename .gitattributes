@@ -1,1 +1,11 @@
-vectorstores/visitjeju_db_place_food_shopping_stay filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/chroma.sqlite3 filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/95b7d852-3a46-4914-bef6-3c6ba28e4974/data_level0.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/95b7d852-3a46-4914-bef6-3c6ba28e4974/header.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/95b7d852-3a46-4914-bef6-3c6ba28e4974/length.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/95b7d852-3a46-4914-bef6-3c6ba28e4974/link_lists.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/95b7d852-3a46-4914-bef6-3c6ba28e4974/index_metadata.pickle filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/b13c2317-bb8c-4d3c-bb57-71f1b72a8f55/index_metadata.pickle filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/b13c2317-bb8c-4d3c-bb57-71f1b72a8f55/length.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/b13c2317-bb8c-4d3c-bb57-71f1b72a8f55/link_lists.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/b13c2317-bb8c-4d3c-bb57-71f1b72a8f55/data_level0.bin filter=lfs diff=lfs merge=lfs -text
+vectorstores/visitjeju_db_place_food_shopping_stay/b13c2317-bb8c-4d3c-bb57-71f1b72a8f55/header.bin filter=lfs diff=lfs merge=lfs -text

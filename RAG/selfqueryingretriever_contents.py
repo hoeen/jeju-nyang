@@ -12,7 +12,6 @@ import os
 # TODO : 상대경로로 바꾸기 
 
 
-os.environ["OPENAI_API_KEY"] = api_key
 
 VECTORSTORE_DIR = "../vectorstores/visitjeju_db_place_food_shopping_stay"
 # Initialize LLM and vectorstores

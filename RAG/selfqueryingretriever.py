@@ -11,7 +11,6 @@ import os
 
 
 
-os.environ["OPENAI_API_KEY"] = api_key
 
 VECTORSTORE_DIR = "../vectorstores/visitjeju_db_v6"
 # Initialize LLM and vectorstores

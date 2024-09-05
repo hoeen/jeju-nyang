@@ -11,9 +11,6 @@ import os
 loader = CSVLoader(file_path='./wifi_list_latitude_processed.csv',csv_args={'delimiter': ',','fieldnames': ['apGroupName','category','latitude','longitude']})
 data = loader.load()
 
-with open("./asd.txt", 'r') as f:
-    api_key = f.read()
-os.environ["OPENAI_API_KEY"] = api_key
 
 # text_splitter = RecursiveCharacterTextSplitter(
 #     # Set a really small chunk size, just to show.

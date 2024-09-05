@@ -35,7 +35,6 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 def main():
-    os.environ["OPENAI_API_KEY"] = api_key
 
 # load vectorstore
     title_vectorstore = Chroma(persist_directory="vectorstores/visitjeju_db_v6", collection_name="visitjeju_titles", embedding_function=OpenAIEmbeddings())

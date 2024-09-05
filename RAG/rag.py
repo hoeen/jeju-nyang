@@ -14,8 +14,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import ChatOpenAI
 
 
-os.environ["OPENAI_API_KEY"] = api_key
-
 llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
 
 # load vectorstore

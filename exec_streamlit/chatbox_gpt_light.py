@@ -40,7 +40,6 @@ class Document:
 
 
 def main():
-    os.environ["OPENAI_API_KEY"] = api_key
 
     system = """
         당신은 질문의 의도 파악 분류기입니다.

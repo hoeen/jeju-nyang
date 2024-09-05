@@ -13,7 +13,6 @@ from langchain_community.document_transformers.html2text import Html2TextTransfo
 
 from bs4 import BeautifulSoup
 
-os.environ["OPENAI_API_KEY"] = api_key
 
 URLs = []
 with open('../visitjeju_places_url_list.txt', 'r') as f:

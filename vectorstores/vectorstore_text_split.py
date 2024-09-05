@@ -20,7 +20,6 @@ def title_cleaner(title: str) -> str:
     result = re.sub(r'\(.*?\)', '', title)
     return result.rstrip()
 
-os.environ["OPENAI_API_KEY"] = api_key
 
 
 vectorstore = Chroma(persist_directory="visitjeju_db_v3", embedding_function=OpenAIEmbeddings())

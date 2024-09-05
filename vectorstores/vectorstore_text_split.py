@@ -20,8 +20,6 @@ def title_cleaner(title: str) -> str:
     result = re.sub(r'\(.*?\)', '', title)
     return result.rstrip()
 
-with open("../JW_openai_credential_gpt35.txt", 'r') as f:
-    api_key = f.read()
 os.environ["OPENAI_API_KEY"] = api_key
 
 

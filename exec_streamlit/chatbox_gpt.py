@@ -35,8 +35,6 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 def main():
-    with open("../JW_openai_credential_gpt35.txt", 'r') as f:
-        api_key = f.read()
     os.environ["OPENAI_API_KEY"] = api_key
 
 # load vectorstore

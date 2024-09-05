@@ -10,8 +10,7 @@ from langchain_openai import OpenAIEmbeddings
 import os
 
 # TODO : 상대경로로 바꾸기 
-with open("../JW_openai_credential_gpt35.txt", 'r') as f:
-    api_key = f.read()
+
 
 os.environ["OPENAI_API_KEY"] = api_key
 

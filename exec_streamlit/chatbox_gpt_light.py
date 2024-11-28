@@ -78,8 +78,8 @@ def main():
     structured_llm = llm.with_structured_output(Search)
     query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 
-######
-#2. 기본답변
+    ######
+    #2. 기본답변
     basicprompt = ChatPromptTemplate.from_messages(
         [
             ("system", '''당신은 제주도로 여행 온 사람들을 안내하는 친절하고 귀여운 추천냥😽입니다. 
@@ -94,8 +94,8 @@ def main():
     chain = {"question": RunnablePassthrough()} | basicprompt | basicllm | StrOutputParser()
 
 
-######
-#추천결과 답변 프롬프트
+    ######
+    #추천결과 답변 프롬프트
     system_prompt = """당신은 주어진 추천 결과를 설명해주는 친절하고 귀여운 추천냥😽입니다. 
         ## 지시사항 :
         - 주어진 추천 리스트를 자연스럽게 사용자에게 전달해주세요.
@@ -112,14 +112,14 @@ def main():
 
 
 
-####
-# RAG for 동선 추천
-# VectorStore 및 검색기 설정
+    ####
+    # RAG for 동선 추천
+    # VectorStore 및 검색기 설정
     vectorstore = Chroma(persist_directory="./vectorstores/wifilist_lat_db_v2", embedding_function=OpenAIEmbeddings(),
                          create_collection_if_not_exists=False)
     retriever = vectorstore.as_retriever(k=1)
 
-# 문서 형식 지정
+    # 문서 형식 지정
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
@@ -157,7 +157,7 @@ def main():
 
 
 
-### 새로운 질문:
+    ### 새로운 질문:
     Question: {question}
     Context: {context}
 
@@ -174,7 +174,7 @@ def main():
         | StrOutputParser()
     )
 
-####### 페이지 랜딩
+    ####### 페이지 랜딩
 
     st.title('제주냥😽')
     init_content = "반가워!🐱💞 나는 제주도에 관한 답변을 해주는 제주냥이다냥! 제주도 맛집이나 카페, 여행지, 숙박업소 관련 질문을 해 주면 이 몸이 친절하게 알려주겠다냥 (=^･ｪ･^=))ﾉ彡☆🍊"
@@ -210,7 +210,7 @@ def main():
     chat_box.init_session()
     chat_box.output_messages()
 
-# RAG 인스턴스 
+    # RAG 인스턴스 
     selfqueryingretrieverTitle = SelfQueryingRetrieverTitle(llm, 'vectorstores/visitjeju_db_place_food_shopping_stay')
     selfqueryingretrieverContents = SelfQueryingRetrieverContents(llm, 'vectorstores/visitjeju_db_place_food_shopping_stay')
     

@@ -1,6 +1,7 @@
 # Jeju-nyang
 제주도 여행지 추천 챗봇, 제주냥🐾
 
+<<<<<<< HEAD
 
 # 설명
 **챗봇으로 여행지에 대한 정확한 정보를 얻고, 동선까지 추천 받을 수 있다면?** 
@@ -65,6 +66,3 @@ RAG(Retrieval-Augmented Generation) 을 활용하여, 질문에서 먼저 핵심
 **그 결과 측정한 모든 n-gram BLEU 스코어에서 기존 llm 대비 RAG을 통해 성능 향상을 이루었고, 특히 1-4gram BLEU 스코어 기준 57% 향상되었습니다.** [성능 측정 코드](evaluate.py)
 ![](bleu.png)
 
-
-
-# 
